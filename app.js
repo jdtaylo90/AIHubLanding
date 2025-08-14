@@ -1,56 +1,103 @@
-// AI Hub JavaScript
+// AI Hub JavaScript - Enhanced Version
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize service links
     const serviceLinks = document.querySelectorAll('.service-link');
-    
+    const serviceCards = document.querySelectorAll('.service-card');
+
+    // Ensure links open in same tab
     serviceLinks.forEach(link => {
-        // Ensure links open in same tab
         link.setAttribute('target', '_self');
-        
+
         // Add click event listener for smooth interaction
         link.addEventListener('click', function(e) {
             const card = this.closest('.service-card');
-            
+
             // Add brief scale effect on click
-            card.style.transform = 'scale(0.95)';
-            
-            // Allow the click to proceed normally after brief animation
+            card.style.transform = 'translateY(-10px) scale(0.98)';
+
+            // Reset after brief animation
             setTimeout(() => {
-                // The browser will handle navigation automatically
-            }, 50);
+                card.style.transform = 'translateY(-10px) scale(1.05)';
+            }, 100);
         });
-        
+
         // Enhanced keyboard support
         link.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                // Trigger the click event which will handle navigation
-                this.click();
+                // Add visual feedback
+                const card = this.closest('.service-card');
+                card.style.transform = 'translateY(-10px) scale(1.08)';
+
+                // Navigate after brief delay
+                setTimeout(() => {
+                    window.location.href = this.href;
+                }, 150);
             }
         });
-        
+
         // Add proper focus handling
         link.addEventListener('focus', function() {
-            this.closest('.service-card').style.transform = 'translateY(-3px)';
+            const card = this.closest('.service-card');
+            card.style.transform = 'translateY(-8px) scale(1.02)';
         });
-        
+
         link.addEventListener('blur', function() {
-            this.closest('.service-card').style.transform = '';
+            const card = this.closest('.service-card');
+            card.style.transform = '';
         });
     });
-    
-    // Ensure all images are loaded
-    const serviceLogos = document.querySelectorAll('.service-logo');
-    serviceLogos.forEach(logo => {
-        logo.addEventListener('error', function() {
-            console.error('Failed to load logo:', this.src);
-            this.alt = 'Logo not available';
-        });
-        
-        logo.addEventListener('load', function() {
-            console.log('Logo loaded successfully:', this.alt);
+
+    // Add entrance animation with stagger effect
+    serviceCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+
+        setTimeout(() => {
+            card.style.transition = 'all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, (index + 1) * 200);
+    });
+
+    // Add smooth scroll and page load optimization
+    const mainTitle = document.querySelector('.main-title');
+    if (mainTitle) {
+        mainTitle.style.opacity = '0';
+        mainTitle.style.transform = 'translateY(-20px)';
+
+        setTimeout(() => {
+            mainTitle.style.transition = 'all 1s ease-out';
+            mainTitle.style.opacity = '1';
+            mainTitle.style.transform = 'translateY(0)';
+        }, 100);
+    }
+
+    // Add subtle parallax effect on mouse move
+    document.addEventListener('mousemove', function(e) {
+        const cards = document.querySelectorAll('.service-card');
+        const mouseX = e.clientX / window.innerWidth;
+        const mouseY = e.clientY / window.innerHeight;
+
+        cards.forEach((card, index) => {
+            const offsetX = (mouseX - 0.5) * 10 * (index + 1);
+            const offsetY = (mouseY - 0.5) * 10 * (index + 1);
+
+            if (!card.matches(':hover')) {
+                card.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+            }
         });
     });
-    
-    console.log('AI Hub loaded successfully with', serviceLinks.length, 'services');
+
+    // Reset parallax on mouse leave
+    document.addEventListener('mouseleave', function() {
+        const cards = document.querySelectorAll('.service-card');
+        cards.forEach(card => {
+            if (!card.matches(':hover')) {
+                card.style.transform = '';
+            }
+        });
+    });
+
+    console.log('AI Hub enhanced version loaded successfully with', serviceLinks.length, 'service links');
 });
